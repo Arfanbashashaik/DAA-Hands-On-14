@@ -1,0 +1,25 @@
+def find_shortest_paths_all_pairs(adj_list):
+    shortest_matrix = {start:{end:float('inf')for end in adj_list} for start in adj_list}
+    for node in adj_list:
+        shortest_matrix[node][node]=0  
+        for connected_node,cost in adj_list[node].items():
+            shortest_matrix[node][connected_node]=cost
+    for midpoint in adj_list:
+        for source in adj_list:
+            for target in adj_list:
+                shortest_matrix[source][target]= min(
+                    shortest_matrix[source][target],
+                    shortest_matrix[source][midpoint] +shortest_matrix[midpoint][target]
+                )
+    return shortest_matrix
+weighted_network = {
+    'A':{'B': 2, 'C': 4, 'D': 5},
+    'B':{'A': 2, 'C': 1},
+    'C':{'D': 3},
+    'D':{'A': 1, 'C': 6}
+}
+result_matrix = find_shortest_paths_all_pairs(weighted_network)
+print("Shortest distances between all pairs of nodes:")
+for start_node, targets in result_matrix.items():
+    for end_node, distance in targets.items():
+        print(f"Distance from {start_node} to {end_node}: {distance}")
