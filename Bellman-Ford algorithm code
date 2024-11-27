@@ -1,1 +1,32 @@
-a
+def find_shortest_paths(weighted_graph, source):
+    shortest_distances = {vertex:float('inf') for vertex in weighted_graph}
+    shortest_distances[source]=0
+    for _ in range(len(weighted_graph)-1):
+        for current_node in weighted_graph:
+            for adjacent_node,edge_weight in weighted_graph[current_node].items():
+                if (shortest_distances[current_node]+edge_weight < 
+                        shortest_distances[adjacent_node]):
+                    shortest_distances[adjacent_node]=shortest_distances[current_node]+edge_weight
+    for current_node in weighted_graph:
+        for adjacent_node, edge_weight in weighted_graph[current_node].items():
+            if (shortest_distances[current_node]+edge_weight< 
+                    shortest_distances[adjacent_node]):
+                raise ValueError("The graph contains a negative weight cycle.")
+    return shortest_distances
+# Example usage
+graph_data = {
+    'A':{'B':8,'C':9},
+    'B':{'D':2},
+    'C':{'B':4,'D':6},
+    'D':{'E':-7},
+    'E':{}
+}
+starting_vertex='A'
+try:
+    distances=find_shortest_paths(graph_data, starting_vertex)
+    print(f"Shortest paths from node '{starting_vertex}':")
+    for vertex,distance in distances.items():
+        print(f"{vertex}:{distance}")
+except ValueError as error:
+    print(f"Error:{error}")
+
